@@ -777,7 +777,7 @@ function getTotals(options, schedule, resultCallback) {
       var ab =  player.stats["AB"];
       
       player.stats.ERA = player.stats.ER * INNINGS_PER_GAME / ip;
-      player.stats.IP = Math.floor(player.stats.outs / 3) + "." + (player.stats.outs % 3);
+      player.stats.IP = parseFloat(Math.floor(player.stats.outs / 3) + "." + (player.stats.outs % 3))
       player.stats.WHIP = (player.stats.H + player.stats.BB) / ip;
       player.stats.P_IP = player.stats["#P"] / ip;
       player.stats.P_BF = player.stats["#P"] / bf;
