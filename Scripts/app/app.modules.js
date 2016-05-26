@@ -1,1 +1,0 @@
-var app = angular.module("GameChangerExtraction", ["ngRoute", "kendo.directives", "ui.router"]);
