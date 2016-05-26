@@ -771,10 +771,10 @@ function getTotals(options, schedule, resultCallback) {
     
     // go through pitching stats and calculate things like ERA.
     results.pitchStatsData.forEach(function(player) {
-      var ip = ((player.stats.outs || 1) / 3);
-      var bf = (player.stats.BF || 1);
-      var pitches = player.stats["#P"] || 1;
-      var ab =  player.stats["AB"] || 1;
+      var ip = ((player.stats.outs) / 3);
+      var bf = (player.stats.BF);
+      var pitches = player.stats["#P"];
+      var ab =  player.stats["AB"];
       
       player.stats.ERA = player.stats.ER * INNINGS_PER_GAME / ip;
       player.stats.IP = Math.floor(player.stats.outs / 3) + "." + (player.stats.outs % 3);
