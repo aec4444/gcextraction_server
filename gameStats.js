@@ -3,6 +3,7 @@ var filter = require("./util/filterUtil.js");
 var gcHttp = require("./util/httpUtil.js");
 var rosterLibrary = require("./roster.js");
 var async = require("async");
+var absentList = require("./Pride10UData/absent.js");
 
 module.exports = {
   getStats: getGameStats,
@@ -335,6 +336,28 @@ function getBattingOrder(json) {
 
   if (json.stream && json.stream.home_lineup && json.stream.home_lineup.batters)
     getBattingOrderHelper(results, json.stream.home_lineup.batters);
+  
+  // go through results, and set the players who were not in the batting order as position 0.
+  var players = json.players;
+  for (var k in players) {
+    if (players.hasOwnProperty(k)) {
+      var foundPlayer = filter.filter(results, "playerId", k);
+      if (!foundPlayer || foundPlayer === null || foundPlayer.length === 0) {
+        // see if the player is absent (-1) or just didn't start (0)
+        var absent = filter.filter(absentList.absentList, "playerId", k);
+        if (absent && absent !== null && absent.length > 0) {
+          absent = filter.filter(absent, "gameId", json.game["_id"]);
+          if (absent && absent !== null && absent.length > 0) {
+            results.push({playerId: k, pos: -1});       
+          }
+        }
+
+        if (!absent || absent === null || absent.length === 0)        
+          results.push({playerId: k, pos: 0});        
+      }
+
+    }
+  }
   
   return results;
 }
@@ -749,7 +772,7 @@ function sumBattingOrderData(results, game, roster) {
         if (result.pos > 12)
           result.pos = 12;
 
-        for (var pos = 1; pos <= 12; pos++) {
+        for (var pos = -1; pos <= 12; pos++) {
           item["pos" + pos] = 0;
         }
         item["pos" + result.pos] += 1;
