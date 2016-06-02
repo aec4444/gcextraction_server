@@ -314,6 +314,30 @@ function gameBoxScoreFindTeam(json) {
   
   return null;
 }
+
+function getBattingOrderHelper(results, batting) {
+  for (var i = 0; i < batting.length; i++) {
+    var prev = batting[i].prev;
+    if (prev) {
+      var starter = prev[0];
+      if (starter)      
+        results.push({playerId: starter.player_id, pos: i+1});
+    }
+  }
+}
+
+function getBattingOrder(json) {
+  //set batting order which is just player ID and position
+  var results = [];
+  
+  if (json.stream && json.stream.away_lineup && json.stream.away_lineup.batters)
+    getBattingOrderHelper(results, json.stream.away_lineup.batters);
+
+  if (json.stream && json.stream.home_lineup && json.stream.home_lineup.batters)
+    getBattingOrderHelper(results, json.stream.home_lineup.batters);
+  
+  return results;
+}
     
 function getGameStats(gameId, streamId, callback) {
   // get all the stats for the games.
@@ -328,7 +352,8 @@ function getGameStats(gameId, streamId, callback) {
     dist: [],
     field: [],
     stats: [],
-    pitchStats: []
+    pitchStats: [],
+    battingOrder: []
   };
   
   var gameResults = [];
@@ -363,7 +388,7 @@ function getGameStats(gameId, streamId, callback) {
         results.runners = getStatsRunners(plays);
         results.dist = getStatsHitDistribution(plays);
         results.field = getPositionCounts(plays, players);
-        
+        results.battingOrder = getBattingOrder(json);
         taskCallback();
       });
     });
@@ -712,6 +737,37 @@ function sumPitchStatsData(results, game, roster) {
   );
 }
 
+function sumBattingOrderData(results, game, roster) {
+  if (game.battingOrder !== undefined && game.battingOrder !== null) {
+    return processItem(results.battingOrderData, game.battingOrder, roster,
+      function(resultList, result, player) {
+        var item = {
+          player: player,
+          playerId: result.playerId
+        }
+        
+        if (result.pos > 12)
+          result.pos = 12;
+
+        for (var pos = 1; pos <= 12; pos++) {
+          item["pos" + pos] = 0;
+        }
+        item["pos" + result.pos] += 1;
+        resultList.push(item);
+      },
+      function(item, result) {
+        if (result.pos > 12)
+          result.pos = 12;
+
+        item["pos" + result.pos] += 1;
+      } 
+    );
+  }
+  
+  return results.battingOrderData;
+
+}
+
 function getTotals(options, schedule, resultCallback) {
   // get the stats via the schedule asynchronously, and then get the roster and go.
   var asyncTasks = [];
@@ -725,7 +781,8 @@ function getTotals(options, schedule, resultCallback) {
     distData: [],
     fieldData: [],
     statsData: [],
-    pitchStatsData: []
+    pitchStatsData: [],
+    battingOrderData: []
   };
   
   // get the roster
@@ -757,6 +814,7 @@ function getTotals(options, schedule, resultCallback) {
       results.fieldData = sumFieldData(results, game, roster);
       results.statsData = sumStatsData(results, game, roster);
       results.pitchStatsData = sumPitchStatsData(results, game, roster);
+      results.battingOrderData = sumBattingOrderData(results, game, roster);
     });
 
     // go through regular stats and calculate things like AVG
