@@ -73,10 +73,18 @@ app.post("/stats", function(req, res) {
 });
 
 
-app.get("/login", function(req, res) {
+app.post("/login", function(req, res) {
   var def = settings.defaults();
   
-  gcHttp.login(def.username, def.password, def.csrfmiddlewaretoken, function(data) {
+  var username = def.username;
+  if (req.params.username)
+    username = req.params.username;
+
+  var password = def.password;
+  if (req.params.password)
+    password = req.params.password;
+
+  gcHttp.login(username, password, def.csrfmiddlewaretoken, function(data) {
     res.send(data);
   });
 });

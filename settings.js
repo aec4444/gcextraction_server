@@ -10,9 +10,9 @@ function getDefaults() {
     season: "spring-2016",
     //username: "angela_hauser@bloomfield.edu",
     //password: "Jhouse@48jr",
-    username: 'aec4444@gmail.com',
+    username: 'admin@wissearch.net',
     password: 'dellp100',
-    csrfmiddlewaretoken: "y6bKvv5mqjCjTYczxKIimsgvoV1KgJ66"
+    csrfmiddlewaretoken: "6C8U31SosO6TQdxm5BZx5b51Wg1MDtjO"
   };
 
   return gamechangerSettings;  
