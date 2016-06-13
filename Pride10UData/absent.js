@@ -28,7 +28,18 @@ var absent = [
     {playerId: "56ede47c03124a0021fad4f2", gameId: "56ede515afff9300248102e4", player: "Nina"},    
     {playerId: "56ede47c03124a0021fad4f2", gameId: "56edee60a28c780024f556d9", player: "Nina"},
     {playerId: "56ede47c03124a0021fad4ef", gameId: "56ede515afff9300248102e4", player: "Julia"}, 
-    {playerId: "56ede47c03124a0021fad4ef", gameId: "56edee60a28c780024f556d9", player: "Julia"}    
+    {playerId: "56ede47c03124a0021fad4ef", gameId: "56edee60a28c780024f556d9", player: "Julia"},    
+
+    {playerId: "56ede47c03124a0021fad4ea", gameId: "575c82cb4ef8163e0f000292", player: "Gianna"},
+    {playerId: "56ede47c03124a0021fad4ea", gameId: "575c82cb4ef8161267000164", player: "Gianna"},
+    {playerId: "56ede47c03124a0021fad4ea", gameId: "575b82cb4ef816fb7b000002", player: "Gianna"},
+    {playerId: "56ede47d03124a0021fad4f4", gameId: "575c82cb4ef8163e0f000292", player: "Alyssa"},
+    {playerId: "56ede47d03124a0021fad4f4", gameId: "575c82cb4ef8161267000164", player: "Alyssa"},
+    {playerId: "56ede47d03124a0021fad4f4", gameId: "575b82cb4ef816fb7b000002", player: "Alyssa"},
+
+    {playerId: "56ede47c03124a0021fad4ee", gameId: "575c82cb4ef8163e0f000292", player: "Alle"},
+    {playerId: "56ede47c03124a0021fad4ee", gameId: "575c82cb4ef8161267000164", player: "Alle"},
+    {playerId: "56ede47c03124a0021fad4ee", gameId: "575b82cb4ef816fb7b000002", player: "Alle"},
 ]
 
 module.exports = {
