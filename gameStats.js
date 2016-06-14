@@ -209,6 +209,7 @@ function getStatsPerCountBuildObject(resultKeys, playerId, key) {
       strikes: 0,
       balls: 0,
       outs: 0,
+      GroundOFOut: 0,
       playerId: playerId
     };
     resultKeys[key] = playerResult;
@@ -237,9 +238,16 @@ function getStatsPerCountIncrement(playerResult, item) {
     case "E":
     case "FC":
     case "OF":
-    case "OG":
     case "OL":
       playerResult.AB += 1;
+      break;
+    case "OG":
+      var player = item["short_description"].substring(0, 1);
+      if (parseInt(player) > 6)
+        playerResult.GroundOFOut += 1;
+
+      playerResult.AB += 1;
+
       break;
     case "K":
     case "KO":
@@ -848,6 +856,17 @@ function getTotals(options, schedule, resultCallback) {
       player.stats.OPS = player.stats.OBP + player.stats.SLG;
       player.stats.AVGRISP = player.stats.HRISP / (player.stats.ABRISP || 1);
       player.stats.QABPCT = player.stats.QAB / (player.stats.PA || 1);
+
+      // get the number of outs made on hits to the OF.
+      // find the outs data for the player
+      var playerOuts = filter.filter(results.outsData, "playerId", player.playerId);
+      player.stats.GroundOFOut = 0;
+      if (playerOuts !== undefined && playerOuts.length > 0) {
+        playerOuts = playerOuts[0];
+        if (playerOuts["0"]) player.stats.GroundOFOut += playerOuts["0"].GroundOFOut;
+        if (playerOuts["1"]) player.stats.GroundOFOut += playerOuts["1"].GroundOFOut;
+        if (playerOuts["2"]) player.stats.GroundOFOut += playerOuts["2"].GroundOFOut;
+      }
     });
     
     // go through pitching stats and calculate things like ERA.
