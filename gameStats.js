@@ -858,7 +858,7 @@ function getTotals(options, schedule, resultCallback) {
       player.stats.QABPCT = player.stats.QAB / (player.stats.PA || 1);
 
       // get the number of outs made on hits to the OF.
-      // find the outs data for the player
+      // find the outs data for the player to assign to stats
       var playerOuts = filter.filter(results.outsData, "playerId", player.playerId);
       player.stats.GroundOFOut = 0;
       if (playerOuts !== undefined && playerOuts.length > 0) {
