@@ -24,7 +24,7 @@ function getCache(key) {
 function setCache(data, key, expiry) {
   if (!expiry) {
     expiry = new Date();
-    expiry.setHours(expiry.getHours() + 1);
+    expiry.setMinutes(expiry.getMinutes() + 1);
   }
     
   var cacheItem = {data: data, cacheTime: expiry};
