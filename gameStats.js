@@ -81,12 +81,14 @@ function getPitchesThrownToData(plays) {
   
   // now go through all pbp to see bunts
   for (var i = 0; i < plays.length; i++) {
-    var hitType = item.properties["hit_type"];
-    if (hitType == "bunt") {
-      var batter = item.participants[0].player["$id"];
-      var playerResult = resultKeys[batter];
-      if (playerResult != undefined && playerResult != null)
-        playerResult.bunts += 1;
+    if (plays[i].properties !== undefined && plays[i].properties !== null) {
+      var hitType = plays[i].properties["hit_type"];
+      if (hitType == "bunt") {
+        var batter = item.participants[0].player["$id"];
+        var playerResult = resultKeys[batter];
+        if (playerResult != undefined && playerResult != null)
+          playerResult.bunts += 1;
+      }
     }
   }
 
