@@ -81,10 +81,11 @@ function getPitchesThrownToData(plays) {
   
   // now go through all pbp to see bunts
   for (var i = 0; i < plays.length; i++) {
-    if (plays[i].properties !== undefined && plays[i].properties !== null) {
-      var hitType = plays[i].properties["hit_type"];
+    var itemPlay = plays[i];
+    if (itemPlay.properties !== undefined && itemPlay.properties !== null) {
+      var hitType = itemPlay.properties["hit_type"];
       if (hitType !== undefined && hitType !== null && hitType === "bunt") {
-        var batter = item.participants[0].player["$id"];
+        var batter = itemPlay.participants[0].player["$id"];
         var playerResult = resultKeys[batter];
         if (playerResult !== undefined && playerResult !== null)
           playerResult.bunts += 1;
@@ -589,6 +590,9 @@ function sumPitchData(results, game, roster) {
       resultList.push(result);
       result.player = player;
       result.games = 1;
+
+      if (result.bunts === undefined || result.bunts === null)
+        result.bunts = 0;
     },
     function (pitchDataItem, result) {
       pitchDataItem.pa += result.pa;
@@ -598,7 +602,9 @@ function sumPitchData(results, game, roster) {
       pitchDataItem.strikesSwinging += result.strikesSwinging,
       pitchDataItem.fouls += result.fouls,
       pitchDataItem.inPlay += result.inPlay;
-      pitchDataItem.bunts += result.bunts;
+
+      if (result.bunts !== undefined && result.bunts !== null )
+        pitchDataItem.bunts += result.bunts;
     }
   );
 }
