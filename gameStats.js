@@ -197,10 +197,12 @@ function getStatsHitDistribution(plays) {
         count: 0,
         pos: whereBall,
         playerId: batter,
-        hitType: hitType
+        bunts: 0
       };
     }
     resultKeys[key].count++;
+    if (hitType == "bunt") 
+      resultKeys[key].bunts++;
   }
 
   return getStatsTurnVertical(resultKeys);
@@ -694,6 +696,8 @@ function sumDistData(results, game, roster) {
     positions.forEach(function(pos) {
       item[pos] = 0;
     });
+    item["bunts"] = 0;
+    
     list.push(item);
   });
       
@@ -702,6 +706,7 @@ function sumDistData(results, game, roster) {
     processFoundItem(results.distData, result, undefined, undefined, 
       function(hitDistItem, result) {
         hitDistItem[result.pos] += result.count;
+        hitDistItem["bunts"] += result.bunts;
       }
     );
   });
