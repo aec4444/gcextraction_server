@@ -83,10 +83,10 @@ function getPitchesThrownToData(plays) {
   for (var i = 0; i < plays.length; i++) {
     if (plays[i].properties !== undefined && plays[i].properties !== null) {
       var hitType = plays[i].properties["hit_type"];
-      if (hitType == "bunt") {
+      if (hitType !== undefined && hitType !== null && hitType === "bunt") {
         var batter = item.participants[0].player["$id"];
         var playerResult = resultKeys[batter];
-        if (playerResult != undefined && playerResult != null)
+        if (playerResult !== undefined && playerResult !== null)
           playerResult.bunts += 1;
       }
     }
@@ -598,6 +598,7 @@ function sumPitchData(results, game, roster) {
       pitchDataItem.strikesSwinging += result.strikesSwinging,
       pitchDataItem.fouls += result.fouls,
       pitchDataItem.inPlay += result.inPlay;
+      pitchDataItem.bunts += result.bunts;
     }
   );
 }
