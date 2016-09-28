@@ -47,7 +47,8 @@ function getPitchesThrownToData(plays) {
         strikesSwinging: 0,
         fouls: 0,
         inPlay: 0,
-        pa: 0
+        pa: 0,
+        bunts: 0
       };
       resultKeys[batter] = playerResult;
     };
@@ -78,6 +79,17 @@ function getPitchesThrownToData(plays) {
     }    
   }
   
+  // now go through all pbp to see bunts
+  for (var i = 0; i < plays.length; i++) {
+    var hitType = item.properties["hit_type"];
+    if (hitType == "bunt") {
+      var batter = item.participants[0].player["$id"];
+      var playerResult = resultKeys[batter];
+      if (playerResult != undefined && playerResult != null)
+        playerResult.bunts += 1;
+    }
+  }
+
   return getStatsTurnVertical(resultKeys);
 }
 
@@ -176,6 +188,7 @@ function getStatsHitDistribution(plays) {
     // get the batter participant
     var batter = item.participants[0].player["$id"];
     var whereBall = item.properties.defender;
+    var hitType = item.properties["hit_type"];
 
     var key = batter + "_" + whereBall;
     var playerResult = resultKeys[key];
@@ -183,7 +196,8 @@ function getStatsHitDistribution(plays) {
       resultKeys[key] = {
         count: 0,
         pos: whereBall,
-        playerId: batter
+        playerId: batter,
+        hitType: hitType
       };
     }
     resultKeys[key].count++;
