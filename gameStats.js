@@ -305,7 +305,10 @@ function getPositionCounts(plays, players) {
             count: 0,
             start: 0
           };
+        }
 
+        var totalResult = resultKeys[keyTotal];
+        if (totalResult === undefined) {
           resultKeys[keyTotal] = {
             pos: "total",
             playerId: fielders[k],
@@ -313,11 +316,13 @@ function getPositionCounts(plays, players) {
             start: 0
           };
         }
+
         resultKeys[key].count++;
         resultKeys[keyTotal].count++;
 
         if ((item.half === 0 && firstPlayAway) || (item.half === 1 && firstPlayHome)) {
           resultKeys[key].start++;
+          resultKeys[keyTotal].start++;
         }
       }
     }
@@ -590,6 +595,7 @@ function sumPitchData(results, game, roster) {
       resultList.push(result);
       result.player = player;
       result.games = 1;
+      result.pitches = result.strikesLooking + result.strikesSwinging + result.balls + result.fouls + result.inPlay;
 
       if (result.bunts === undefined || result.bunts === null)
         result.bunts = 0;
@@ -602,6 +608,7 @@ function sumPitchData(results, game, roster) {
       pitchDataItem.strikesSwinging += result.strikesSwinging,
       pitchDataItem.fouls += result.fouls,
       pitchDataItem.inPlay += result.inPlay;
+      pitchDataItem.pitches += result.strikesLooking + result.strikesSwinging + result.balls + result.fouls + result.inPlay;
 
       if (result.bunts !== undefined && result.bunts !== null )
         pitchDataItem.bunts += result.bunts;
@@ -736,7 +743,8 @@ function sumFieldData(results, game, roster) {
       item[pos] = {
         thirds: 0,
         games: 0,
-        start: 0
+        start: 0,
+        innings: "0.0"
       };
     });
     list.push(item);
@@ -749,6 +757,7 @@ function sumFieldData(results, game, roster) {
         fieldDataItem[result.pos].thirds += result.count;
         fieldDataItem[result.pos].games++;
         fieldDataItem[result.pos].start += result.start;
+        fieldDataItem[result.pos].innings = Math.floor(fieldDataItem[result.pos].thirds / 3) + "." + (fieldDataItem[result.pos].thirds % 3);
       }
     );
   });
@@ -876,6 +885,17 @@ function getTotals(options, schedule, resultCallback) {
       results.battingOrderData = sumBattingOrderData(results, game, roster);
     });
 
+    results.battingOrderData.forEach(function (player) {
+      player.total = 0;
+      for (var i = 1; i <= 12; i++) {
+        player.total += player["pos" + i];
+      }
+    });
+
+    results.pitchData.forEach(function (player) {
+      player.pitchesPerPa = player.pitches / (player.pa || 1);
+    });
+
     // go through regular stats and calculate things like AVG
     results.statsData.forEach(function (player) {
       player.stats.AVG = player.stats.H / (player.stats.AB || 1);
@@ -884,6 +904,8 @@ function getTotals(options, schedule, resultCallback) {
       player.stats.OPS = player.stats.OBP + player.stats.SLG;
       player.stats.AVGRISP = player.stats.HRISP / (player.stats.ABRISP || 1);
       player.stats.QABPCT = player.stats.QAB / (player.stats.PA || 1);
+      player.stats.KPCT = player.stats.SO / (player.stats.PA || 1);
+      player.stats.SAC = player.stats.SHB + player.stats.SHF;
 
       // get the number of outs made on hits to the OF.
       // find the outs data for the player to assign to stats
