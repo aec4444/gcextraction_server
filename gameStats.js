@@ -415,7 +415,7 @@ function getGameStats(gameId, streamId, callback) {
   
   if (streamId !== undefined && streamId !== null) {
     tasks.push(function(taskCallback) {
-      var url = "https://push.gamechanger.io/push/game/" + gameId + "/stream/" + streamId + "?index=0";
+      var url = "https://push.gamechanger.io/push/game/" + gameId + "/stream/" + streamId + "?index=0&sabertooth_aware=true";
       
       gcHttp.get(url, function(d) {
         // got the data, now what?
