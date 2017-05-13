@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 
 var gameStats = require("./gameStats.js");
+var updateStats = require("./updateStats.js");
 var schedule = require("./schedule.js");
 var roster = require("./roster.js");
 var settings = require("./settings.js");
@@ -10,7 +11,7 @@ var filter = require("./util/filterUtil.js");
 var async = require("async");
 
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8081
-var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1' 
 
 app.use(express.static('public'));
 
@@ -92,6 +93,53 @@ app.post("/login", function(req, res) {
 app.get("/stats/:gameId/:streamId", function(req, res) {
   gameStats.getStats(req.params.gameId, req.params.streamId, function(data) {
     res.send(data);
+  });
+});
+
+app.post("/stats/:gameId/:streamId", function(req, res) {
+  var stats = [
+    {
+        "category": "offense",
+        "stat": "HBP",
+        "old": "0",
+        "val": "1",
+        "ts": 1492373999534,
+        "entity_id": "58be1fd943ee3f00202197bd",
+        "type": "player_stat",
+        "parent_id": "57da99dbbb36b30023bc460f"
+    },
+    {
+        "category": "offense",
+        "stat": "HBP",
+        "old": "2",
+        "val": 3,
+        "ts": 1492373999576,
+        "entity_id": "57da99dbbb36b30023bc460f",
+        "type": "team_stat"
+    },
+    {
+        "category": "offense",
+        "stat": "AB",
+        "old": "2",
+        "val": "1",
+        "ts": 1492373999534,
+        "entity_id": "58be1fd943ee3f00202197bd",
+        "type": "player_stat",
+        "parent_id": "57da99dbbb36b30023bc460f"
+    },
+    {
+        "category": "offense",
+        "stat": "AB",
+        "old": "23",
+        "val": 22,
+        "ts": 1492373999576,
+        "entity_id": "57da99dbbb36b30023bc460f",
+        "type": "team_stat"
+    }
+  ];
+
+  updateStats.update(req.params.gameId, req.params.streamId, stats, function(data) {
+
   });
 });
 

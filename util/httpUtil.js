@@ -6,6 +6,7 @@ var cookieJar = request.jar();
 
 module.exports = {
   get: callHttpGet,
+  post: callHttpPost,
   login: login
 };
 
@@ -33,7 +34,31 @@ function login(email, password, token, callback) {
   
   request.post(options, function(error, response, body) {
     var x = error;
-    callback(body);
+    callback(response);
+  });
+}
+
+function callHttpPost(url, payload, token, referer, callback) {
+  cookieJar = request.jar();
+  
+  var options = {
+    url: url,
+    headers: {
+      'Host': "gc.com",
+      'Origin': "https://gc.com",
+      'Content-Type': "application/json",
+      'Accept': "application/json",
+      'Referer': referer || 'https://gc.com',
+      'Cookie': "exp_id=2bbfd5e5-8a1e-49b0-b0ca-a5b7f0719e0f; csrftoken=" + token,
+      'X-CSRFToken': token
+    },
+    jar: cookieJar,
+    form: payload
+  };
+
+  request.post(options, function(error, response, body) {
+    var x = error;
+    callback(response);
   });
 }
 
