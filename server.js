@@ -25,7 +25,7 @@ app.all('*', function(req, res, next) {
 app.get('/roster', function (req, res) {
   var options = settings.getFromQuery(req);
   roster.get(options.season, options.name, options.teamId, function(roster) {
-    res.send(roster);
+    res.send(roster); 
   })
 })
 
@@ -34,7 +34,7 @@ app.get("/schedule", function(req, res) {
   schedule.get(options.season, options.name, options.teamId, function(schedule) {
     res.send(schedule);
   })
-});
+}); 
 
 var processStats = function(req, res, post) {
   var options = settings.getFromQuery(req, post);
