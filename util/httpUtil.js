@@ -39,7 +39,7 @@ function login(email, password, token, callback) {
 }
 
 function callHttpPost(url, payload, token, referer, callback) {
-  cookieJar = request.jar();
+  cookieJar = request.jar(); 
   
   var options = {
     url: url,
