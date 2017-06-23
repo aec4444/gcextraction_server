@@ -41,7 +41,7 @@ function login(email, password, token, callback) {
 function callHttpPost(url, payload, token, referer, callback) {
   cookieJar = request.jar(); 
   
-  var options = {
+  var options = { 
     url: url,
     headers: { 
       'Host': "gc.com",
