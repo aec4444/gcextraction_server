@@ -43,7 +43,7 @@ function callHttpPost(url, payload, token, referer, callback) {
   
   var options = { 
     url: url,
-    headers: { 
+    headers: {  
       'Host': "gc.com",
       'Origin': "https://gc.com",
       'Content-Type': "application/json",
